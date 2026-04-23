@@ -1,0 +1,97 @@
+-- Advanced Pandas Assignment Solution
+-- Dataset: Sales_dataset
+
+-- Q1 Dataset Exploration
+-- Display first 10 rows, dataset info, shape, and data types
+-- Answer:
+import pandas as pd
+
+df = pd.read_csv("Advanced_pandas_sales_dataset.csv")
+
+print(df.head(10))
+print(df.info())
+print("Shape:", df.shape)
+print(df.dtypes)
+
+-- Q2 Sales Filtering Analysis
+-- Orders where Sales > 3500
+-- Orders where Region = "East" and Sales > 2500
+-- Answer:
+high_sales = df[df['Sales'] > 3500]
+east_sales = df[(df['Region'] == "East") & (df['Sales'] > 2500)]
+
+print(high_sales)
+print(east_sales)
+
+-- Insight:
+-- High-value transactions are concentrated in specific regions.
+-- East region shows moderate-to-high sales orders.
+
+-- Q3 Customer Purchase Analysis
+-- Identify top 5 customers based on total sales
+-- Answer:
+top_customers = df.groupby('Customer')['Sales'].sum().sort_values(ascending=False).head(5)
+print(top_customers)
+
+-- Q4 Regional Sales Performance
+-- Total sales per region and identify highest
+-- Answer:
+region_sales = df.groupby('Region')['Sales'].sum()
+print(region_sales)
+
+print("Highest Revenue Region:", region_sales.idxmax())
+
+-- Q5 Product Performance Analysis
+-- Total quantity sold per product
+-- Answer:
+product_quantity = df.groupby('Product')['Quantity'].sum()
+print(product_quantity)
+
+print("Most Popular Product:", product_quantity.idxmax())
+
+-- Q6 Multi-Level Grouping
+-- Group by Region and Category and calculate total sales
+-- Answer:
+multi_group = df.groupby(['Region', 'Category'])['Sales'].sum()
+print(multi_group)
+
+-- Insight:
+-- Some categories perform better in specific regions,
+-- indicating regional demand variation.
+
+-- Q7 Pivot Table Creation
+-- Rows → Region, Columns → Product, Values → Total Sales
+-- Answer:
+pivot_table = pd.pivot_table(df, values='Sales', index='Region', columns='Product', aggfunc='sum')
+print(pivot_table)
+
+-- Identify region selling most laptops
+print("Region with highest laptop sales:", pivot_table['Laptop'].idxmax())
+
+-- Q8 Profitability Analysis
+-- Average profit per category
+-- Answer:
+profit_analysis = df.groupby('Category')['Profit'].mean()
+print(profit_analysis)
+
+print("Most Profitable Category:", profit_analysis.idxmax())
+
+-- Q9 Discount Impact Study
+-- Relationship between discount and profit
+-- Answer:
+discount_profit = df.groupby('Discount')['Profit'].mean()
+print(discount_profit)
+
+-- Insight:
+-- Higher discounts generally reduce profit margins.
+
+-- Q10 End-to-End Data Wrangling Task
+-- Filter Sales > 3000, group by Region and Product, pivot table
+-- Answer:
+filtered_df = df[df['Sales'] > 3000]
+
+grouped = filtered_df.groupby(['Region', 'Product'])['Sales'].sum().reset_index()
+
+pivot_final = grouped.pivot(index='Region', columns='Product', values='Sales')
+print(pivot_final)
+
